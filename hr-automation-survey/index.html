@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Which HR work should AI take over?</title>
+<meta name="description" content="Two questions, sixty seconds. Pick the two HR processes you would hand to automation, and tell us why.">
+<meta property="og:title" content="Which HR work should AI take over?">
+<meta property="og:description" content="Two questions. Sixty seconds. Help decide what we automate first.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#E9A13B;
+  --gold-deep:#B96F14;
+  --dough:#F8E2B4;
+  --navy:#1B2A78;
+  --navy-deep:#111C55;
+  --teal:#0FB5A5;
+  --crust:#1A120B;
+  --crust-2:#241809;
+  --paper:#FFF3DC;
+  --ink:#14110E;
+  --display:'Unbounded', 'Trebuchet MS', sans-serif;
+  --body:'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:var(--body);
+  color:var(--paper);
+  background-color:var(--crust);
+  background-image:
+    repeating-linear-gradient(90deg, rgba(255,255,255,.035) 0 2px, transparent 2px 7px),
+    repeating-linear-gradient(0deg, rgba(255,255,255,.025) 0 2px, transparent 2px 7px),
+    radial-gradient(120% 80% at 50% -10%, var(--crust-2), var(--crust) 70%);
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+:focus-visible{outline:3px solid var(--teal);outline-offset:3px;border-radius:4px}
+
+/* ---------- shell ---------- */
+.shell{max-width:760px;margin:0 auto;padding:14px 16px 40px;min-height:100%;display:flex;flex-direction:column}
+
+/* ---------- HUD / progress ---------- */
+.hud{position:sticky;top:0;z-index:20;padding:8px 0 12px;
+  background:linear-gradient(to bottom, var(--crust) 62%, rgba(26,18,11,0));}
+.hud__row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:11px;
+  letter-spacing:.14em;text-transform:uppercase;font-weight:700;margin-bottom:6px;white-space:nowrap}
+.hud__row .g{color:var(--gold)}
+.hud__row .b{color:var(--teal)}
+.hud__row .mid{color:#8E7C64;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:540px){.hud__row .mid{display:none}}
+.tug{position:relative;height:16px;border-radius:99px;overflow:hidden;
+  background:var(--navy);box-shadow:inset 0 2px 6px rgba(0,0,0,.45)}
+.tug__fill{position:absolute;inset:0 auto 0 0;width:8%;
+  background:linear-gradient(180deg,var(--gold),var(--gold-deep));
+  transition:width .55s cubic-bezier(.34,1.4,.5,1)}
+.tug__chev{position:absolute;inset:0;
+  background-image:repeating-linear-gradient(115deg, rgba(255,255,255,.16) 0 6px, transparent 6px 18px);
+  opacity:.7;pointer-events:none}
+.rounds{display:flex;gap:3px;margin-top:8px}
+.rounds i{flex:1;height:5px;background:rgba(255,255,255,.13);
+  clip-path:polygon(0 0,86% 0,100% 50%,86% 100%,0 100%,12% 50%);transition:background .3s}
+.rounds i.done{background:var(--teal)}
+.rounds i.now{background:var(--paper)}
+
+/* ---------- screens ---------- */
+.screen{display:none;flex:1;flex-direction:column;justify-content:center;padding:8px 0}
+.screen.on{display:flex;animation:rise .45s cubic-bezier(.2,.8,.3,1) both}
+.screen--list{justify-content:flex-start}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+
+/* ---------- start ---------- */
+.eyebrow{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);font-weight:700}
+.title{font-family:var(--display);font-weight:900;line-height:.92;letter-spacing:-.02em;
+  font-size:clamp(34px,9.6vw,68px);margin:10px 0 0}
+.title em{font-style:normal;display:block;color:var(--teal)}
+.title .vs{display:block;font-size:.36em;color:var(--gold);letter-spacing:.1em;margin:8px 0 4px}
+.lede{margin:18px 0 26px;font-size:clamp(15px,3.6vw,18px);line-height:1.55;color:#E8D9BE;max-width:46ch}
+.stats{display:flex;gap:10px;margin-bottom:26px}
+.stat{flex:1;padding:14px;border-radius:18px;background:linear-gradient(180deg,#2E2113,#1F1710);
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.09)}
+.stat b{display:block;font-family:var(--display);font-weight:900;font-size:clamp(20px,6vw,28px);color:var(--gold);line-height:1}
+.stat span{display:block;margin-top:6px;font-size:12px;color:#C4B295;line-height:1.35}
+
+.cta{display:block;width:100%;padding:20px;border-radius:18px;font-family:var(--display);
+  font-weight:900;font-size:clamp(17px,4.6vw,22px);letter-spacing:-.01em;color:var(--ink);
+  background:linear-gradient(180deg,var(--dough),var(--gold));
+  box-shadow:0 7px 0 var(--gold-deep);transition:transform .12s, box-shadow .12s, filter .2s}
+.cta:active{transform:translateY(5px);box-shadow:0 2px 0 var(--gold-deep)}
+.cta[disabled]{filter:grayscale(.7) brightness(.72);cursor:not-allowed}
+.cta[disabled]:active{transform:none;box-shadow:0 7px 0 var(--gold-deep)}
+.cta--ghost{background:none;color:var(--paper);box-shadow:inset 0 0 0 2px rgba(255,255,255,.25);
+  font-size:15px;padding:15px}
+.cta--ghost:active{transform:translateY(2px);box-shadow:inset 0 0 0 2px rgba(255,255,255,.25)}
+.fineprint{margin-top:14px;font-size:12px;color:#9C8A70;text-align:center}
+
+/* ---------- question ---------- */
+.qhead{margin-bottom:16px}
+.qcount{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--teal);font-weight:700}
+.q{font-family:var(--display);font-weight:700;font-size:clamp(21px,5.2vw,32px);line-height:1.14;
+  letter-spacing:-.02em;margin-top:8px}
+.qnote{margin-top:10px;font-size:14px;color:#C4B295}
+
+/* ---------- options ---------- */
+.opts{display:grid;gap:10px}
+.opt{display:flex;align-items:center;gap:13px;width:100%;text-align:left;padding:13px 15px;border-radius:16px;
+  background:linear-gradient(180deg,#2E2113,#1F1710);box-shadow:inset 0 0 0 2px rgba(255,255,255,.09);
+  transition:transform .16s cubic-bezier(.34,1.5,.5,1), box-shadow .16s, filter .2s, opacity .2s}
+.opt:hover{transform:translateY(-3px)}
+.opt:active{transform:scale(.98)}
+.opt.on{background:linear-gradient(180deg,#3D2C16,#26190D);box-shadow:inset 0 0 0 2px var(--gold)}
+.opt.on.pop{animation:pop .4s cubic-bezier(.3,1.6,.5,1)}
+@keyframes pop{40%{transform:scale(1.03)}100%{transform:scale(1)}}
+.opt.mute{opacity:.4;filter:grayscale(.6)}
+.opt.mute:hover{transform:none}
+.box{flex:0 0 auto;width:27px;height:27px;border-radius:9px;display:grid;place-items:center;
+  border:2px solid rgba(255,255,255,.25);font-size:15px;font-weight:700;color:transparent;transition:all .16s}
+.opt.on .box{border-color:var(--gold-deep);color:var(--ink);
+  background:linear-gradient(180deg,var(--dough),var(--gold))}
+.opt__label{font-size:clamp(14px,3.7vw,16px);font-weight:500;line-height:1.3}
+.opts--teal .opt.on{box-shadow:inset 0 0 0 2px var(--teal);background:linear-gradient(180deg,#13332F,#101E1B)}
+.opts--teal .opt.on .box{border-color:#0A7E73;background:linear-gradient(180deg,#8FF0E5,var(--teal))}
+
+/* ---------- other input ---------- */
+.roast{width:100%;padding:16px;border-radius:16px;background:#241A11;color:var(--paper);
+  border:2px solid rgba(255,255,255,.14);font-family:var(--body);font-size:16px}
+.roast::placeholder{color:#7E6D55}
+.other{display:none;margin-top:10px}
+.other.on{display:block;animation:rise .3s cubic-bezier(.2,.8,.3,1) both}
+
+/* ---------- chips ---------- */
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.chip{font-size:12px;font-weight:700;padding:8px 12px;border-radius:99px;
+  background:rgba(233,161,59,.14);color:var(--gold);box-shadow:inset 0 0 0 1px rgba(233,161,59,.42)}
+
+/* ---------- action bar ---------- */
+.bar{position:sticky;bottom:0;z-index:15;margin-top:18px;padding:14px 0 6px;
+  background:linear-gradient(to top, var(--crust) 68%, rgba(26,18,11,0))}
+.actions{display:flex;gap:10px}
+.actions>*{flex:1}
+.actions .grow{flex:2}
+.bar .cta{font-size:clamp(15px,4.1vw,19px);padding:18px 14px}
+
+/* ---------- result ---------- */
+.crown{text-align:center}
+.crown__label{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--teal);font-weight:700}
+.crown__name{font-family:var(--display);font-weight:900;font-size:clamp(26px,6.8vw,44px);
+  line-height:1.04;margin-top:10px;letter-spacing:-.03em}
+.verdict{margin:16px auto 24px;font-size:15px;line-height:1.55;color:#E8D9BE;max-width:42ch;text-align:center}
+.tally{border-top:1px solid rgba(255,255,255,.12);margin-top:8px}
+.tally__row{display:flex;justify-content:space-between;align-items:center;gap:14px;
+  padding:12px 2px;border-bottom:1px solid rgba(255,255,255,.09);font-size:14px}
+.tally__cat{color:#C4B295;flex:0 0 auto}
+.tally__win{font-weight:700;text-align:right}
+.tally__win.a{color:var(--gold)}
+.tally__win.b{color:var(--teal)}
+.status{margin-top:14px;text-align:center;font-size:13px;color:#9C8A70;min-height:1.2em}
+
+/* ---------- crumbs ---------- */
+.crumb{position:fixed;width:9px;height:9px;border-radius:2px;pointer-events:none;z-index:60}
+@keyframes fall{to{transform:translate(var(--dx),105vh) rotate(var(--rot));opacity:0}}
+
+@media (min-width:620px){
+  .shell{padding-top:20px}
+  .opts{grid-template-columns:1fr 1fr}
+  .opts .full{grid-column:1 / -1}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;
+    transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <header class="hud" id="hud" hidden>
+    <div class="hud__row">
+      <span class="g" id="hudStep">Question 1 of 2</span>
+      <span class="mid">HR automation survey</span>
+      <span class="b" id="hudPick">0 of 2 chosen</span>
+    </div>
+    <div class="tug" role="img" aria-label="Progress through the survey">
+      <div class="tug__fill" id="tugFill"></div>
+      <div class="tug__chev"></div>
+    </div>
+    <div class="rounds" id="rounds"><i></i><i></i></div>
+  </header>
+
+  <!-- START -->
+  <section class="screen on" id="scStart">
+    <p class="eyebrow">HR Tech &middot; what we build first</p>
+    <h1 class="title">Which HR<br>work should<span class="vs">we hand to</span><em>AI first?</em></h1>
+    <p class="lede">Two questions. Pick the two processes you would most like automated, then tell us what makes them painful. Your answers decide which demos we build for the event.</p>
+    <div class="stats">
+      <div class="stat"><b>2</b><span>questions, nothing more</span></div>
+      <div class="stat"><b>60s</b><span>start to finish</span></div>
+      <div class="stat"><b>0</b><span>personal details asked</span></div>
+    </div>
+    <button class="cta" id="btnStart">Start the survey</button>
+    <p class="fineprint">Anonymous. No sign-in, no email.</p>
+  </section>
+
+  <!-- Q1 -->
+  <section class="screen screen--list" id="scQ1">
+    <div class="qhead">
+      <p class="qcount">Question 1 of 2 &middot; Top priorities</p>
+      <h2 class="q">Which TWO HR processes would you most like to automate or improve using AI?</h2>
+      <p class="qnote">Select up to 2 options.</p>
+    </div>
+    <div class="opts" id="q1opts" role="group" aria-label="HR processes"></div>
+    <div class="other" id="q1other">
+      <input class="roast" id="q1otherText" maxlength="80" placeholder="Which process? e.g. exit interviews" aria-label="Other HR process">
+    </div>
+    <div class="bar">
+      <div class="actions">
+        <button class="cta grow" id="q1next" disabled>Pick up to 2 to continue</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q2 -->
+  <section class="screen screen--list" id="scQ2">
+    <div class="qhead">
+      <p class="qcount">Question 2 of 2 &middot; The why</p>
+      <h2 class="q">What makes these processes a good candidate for AI or automation?</h2>
+      <div class="chips" id="q2picks"></div>
+      <p class="qnote">Select all that apply.</p>
+    </div>
+    <div class="opts opts--teal" id="q2opts" role="group" aria-label="Reasons"></div>
+    <div class="other" id="q2other">
+      <input class="roast" id="q2otherText" maxlength="80" placeholder="What else makes it painful?" aria-label="Other reason">
+    </div>
+    <div class="bar">
+      <div class="actions">
+        <button class="cta cta--ghost" id="q2back">Back</button>
+        <button class="cta grow" id="q2next" disabled>Pick at least 1</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESULT -->
+  <section class="screen" id="scDone">
+    <div class="crown">
+      <p class="crown__label">Logged. Thank you.</p>
+      <h2 class="crown__name" id="doneName">Your picks are in</h2>
+    </div>
+    <p class="verdict" id="verdict"></p>
+    <div class="tally" id="tally"></div>
+    <div class="actions" style="flex-direction:column;margin-top:22px">
+      <button class="cta" id="btnShare">Share this survey</button>
+      <button class="cta cta--ghost" id="btnAgain">Answer again</button>
+    </div>
+    <p class="status" id="status"></p>
+  </section>
+
+</div>
+
+<script>
+/* ============================================================
+   PASTE YOUR n8n WEBHOOK URL HERE TO COLLECT RESPONSES.
+   Leave it empty ("") and the form still works - it just
+   shows the summary without sending anything anywhere.
+   ============================================================ */
+const WEBHOOK_URL = "";
+
+const MAX_PICKS = 2;
+const OTHER = "Other";
+
+const PROCESSES = [
+  "Recruitment & Talent Acquisition",
+  "Onboarding & Offboarding",
+  "Employee Records & HR Administration",
+  "Payroll & Compensation",
+  "Performance Management",
+  "Learning & Development",
+  "Employee Engagement & Experience",
+  "Talent Management & Succession Planning",
+  "Workforce Planning & Analytics",
+  "Leave & Attendance Management",
+  "Employee Relations",
+  "Benefits Administration",
+  "HR Reporting & Data Analysis",
+  "Policy & Compliance"
+];
+
+const REASONS = [
+  "Too much manual/repetitive work",
+  "Takes too much time",
+  "Too many emails/spreadsheets",
+  "Prone to human error",
+  "Difficult to get information quickly",
+  "Requires too many approvals",
+  "Poor employee experience",
+  "Difficult to track/follow up",
+  "Data is scattered across different systems"
+];
+
+const state = { step:0, processes:[], processOther:"", reasons:[], reasonOther:"", started:0 };
+const $ = s => document.querySelector(s);
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* ---------- progress ---------- */
+function updateHud(){
+  const onQ1 = state.step === 1;
+  $("#hudStep").textContent = "Question " + state.step + " of 2";
+  $("#hudPick").textContent = onQ1
+    ? state.processes.length + " of " + MAX_PICKS + " chosen"
+    : state.reasons.length + (state.reasons.length === 1 ? " reason" : " reasons");
+  $("#tugFill").style.width = (onQ1 ? (state.processes.length ? 32 : 10) : 72) + "%";
+  [...$("#rounds").children].forEach((el, idx) => {
+    el.className = idx < state.step - 1 ? "done" : (idx === state.step - 1 ? "now" : "");
+  });
+}
+
+function show(id){
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("on"));
+  $(id).classList.add("on");
+  window.scrollTo({top:0, behavior: reduced ? "auto" : "smooth"});
+}
+
+/* ---------- crumbs ---------- */
+function crumbs(x, y, color){
+  if(reduced) return;
+  for(let n = 0; n < 10; n++){
+    const c = document.createElement("div");
+    c.className = "crumb";
+    c.style.left = x + "px"; c.style.top = y + "px";
+    c.style.background = color;
+    c.style.setProperty("--dx", (Math.random()*220 - 110) + "px");
+    c.style.setProperty("--rot", (Math.random()*720 - 360) + "deg");
+    c.style.animation = `fall ${1 + Math.random()*0.9}s cubic-bezier(.3,.7,.6,1) forwards`;
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 2200);
+  }
+}
+
+/* ---------- option lists ---------- */
+function buildOptions(container, labels){
+  container.innerHTML = labels.concat([OTHER]).map(l => `
+    <button type="button" class="opt${l === OTHER ? " full" : ""}" role="checkbox" aria-checked="false" data-label="${esc(l)}">
+      <span class="box" aria-hidden="true">&#10003;</span>
+      <span class="opt__label">${esc(l === OTHER ? "Other - tell us" : l)}</span>
+    </button>`).join("");
+}
+
+function paint(container, selected, limit){
+  container.querySelectorAll(".opt").forEach(btn => {
+    const on = selected.includes(btn.dataset.label);
+    btn.classList.toggle("on", on);
+    btn.setAttribute("aria-checked", on ? "true" : "false");
+    btn.classList.toggle("mute", !on && limit > 0 && selected.length >= limit);
+  });
+}
+
+function toggle(btn, selected, limit){
+  const label = btn.dataset.label;
+  const at = selected.indexOf(label);
+  if(at > -1){ selected.splice(at, 1); return; }
+  if(limit > 0 && selected.length >= limit) return;
+  selected.push(label);
+  const r = btn.getBoundingClientRect();
+  crumbs(r.left + r.width/2, r.top + r.height/2, limit > 0 ? "#E9A13B" : "#0FB5A5");
+  btn.classList.add("pop");
+  setTimeout(() => btn.classList.remove("pop"), 420);
+}
+
+buildOptions($("#q1opts"), PROCESSES);
+buildOptions($("#q2opts"), REASONS);
+
+/* ---------- Q1 ---------- */
+$("#q1opts").addEventListener("click", e => {
+  const btn = e.target.closest(".opt");
+  if(!btn) return;
+  toggle(btn, state.processes, MAX_PICKS);
+  paint($("#q1opts"), state.processes, MAX_PICKS);
+  const other = state.processes.includes(OTHER);
+  $("#q1other").classList.toggle("on", other);
+  if(other) $("#q1otherText").focus({preventScroll:true});
+  const n = state.processes.length;
+  $("#q1next").disabled = n === 0;
+  $("#q1next").textContent = n === 0 ? "Pick up to 2 to continue"
+    : n === 1 ? "Continue with 1 pick" : "Continue";
+  updateHud();
+});
+
+$("#q1next").addEventListener("click", () => {
+  state.processOther = $("#q1otherText").value.trim();
+  if(state.processes.includes(OTHER) && !state.processOther){
+    $("#q1otherText").focus();
+    return;
+  }
+  state.step = 2;
+  $("#q2picks").innerHTML = resolve(state.processes, state.processOther)
+    .map(p => `<span class="chip">${esc(p)}</span>`).join("");
+  show("#scQ2");
+  updateHud();
+});
+
+/* ---------- Q2 ---------- */
+$("#q2opts").addEventListener("click", e => {
+  const btn = e.target.closest(".opt");
+  if(!btn) return;
+  toggle(btn, state.reasons, 0);
+  paint($("#q2opts"), state.reasons, 0);
+  const other = state.reasons.includes(OTHER);
+  $("#q2other").classList.toggle("on", other);
+  if(other) $("#q2otherText").focus({preventScroll:true});
+  const n = state.reasons.length;
+  $("#q2next").disabled = n === 0;
+  $("#q2next").textContent = n === 0 ? "Pick at least 1" : "Submit answers";
+  updateHud();
+});
+
+$("#q2back").addEventListener("click", () => {
+  state.step = 1;
+  show("#scQ1");
+  updateHud();
+});
+
+$("#q2next").addEventListener("click", () => {
+  state.reasonOther = $("#q2otherText").value.trim();
+  if(state.reasons.includes(OTHER) && !state.reasonOther){
+    $("#q2otherText").focus();
+    return;
+  }
+  finish();
+});
+
+/* ---------- finish ---------- */
+function resolve(list, other){
+  return list.map(x => x === OTHER ? (other || "Other") : x);
+}
+
+function finish(){
+  const picks = resolve(state.processes, state.processOther);
+  const why = resolve(state.reasons, state.reasonOther);
+
+  $("#doneName").textContent = picks.join("  +  ").toUpperCase();
+  $("#verdict").textContent = why.length >= 4
+    ? "That is a lot of friction in one place - exactly the kind of process worth automating first."
+    : why.length >= 2
+      ? "Clear signal. This goes straight into deciding which automation demos we build."
+      : "Noted. Every response moves one process up the build list.";
+
+  $("#tally").innerHTML =
+    picks.map((p, i) => `<div class="tally__row"><span class="tally__cat">Priority ${i + 1}</span>
+      <span class="tally__win a">${esc(p)}</span></div>`).join("") +
+    why.map(r => `<div class="tally__row"><span class="tally__cat">Why</span>
+      <span class="tally__win b">${esc(r)}</span></div>`).join("");
+
+  state.step = 3;
+  show("#scDone");
+  $("#hud").hidden = true;
+  party();
+  submit();
+}
+
+function party(){
+  if(reduced) return;
+  let n = 0;
+  const t = setInterval(() => {
+    crumbs(Math.random()*innerWidth, -20, Math.random() > .5 ? "#E9A13B" : "#0FB5A5");
+    if(++n > 7) clearInterval(t);
+  }, 180);
+}
+
+/* ---------- send to webhook ---------- */
+async function submit(){
+  if(!WEBHOOK_URL){
+    $("#status").textContent = "Answers stay on this device - no webhook connected yet.";
+    return;
+  }
+  $("#status").textContent = "Sending your answers...";
+  try{
+    await fetch(WEBHOOK_URL, {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({
+        submittedAt: new Date().toISOString(),
+        secondsTaken: Math.round((Date.now() - state.started)/1000),
+        processes: state.processes,
+        processOther: state.processOther || null,
+        processesResolved: resolve(state.processes, state.processOther),
+        reasons: state.reasons,
+        reasonOther: state.reasonOther || null,
+        reasonsResolved: resolve(state.reasons, state.reasonOther),
+        referrer: document.referrer || null
+      })
+    });
+    $("#status").textContent = "Response recorded. Thank you.";
+  }catch(err){
+    $("#status").textContent = "Couldn't send your response - your picks are still shown above.";
+  }
+}
+
+/* ---------- share ---------- */
+$("#btnShare").addEventListener("click", async () => {
+  const text = `Which HR processes should AI take over? Two questions, 60 seconds: ${location.href}`;
+  if(navigator.share){
+    try{ await navigator.share({text}); return; }catch(e){}
+  }
+  try{
+    await navigator.clipboard.writeText(text);
+    $("#status").textContent = "Link copied. Go and paste it in the group chat.";
+  }catch(e){
+    window.open("https://wa.me/?text=" + encodeURIComponent(text), "_blank");
+  }
+});
+
+/* ---------- restart ---------- */
+$("#btnAgain").addEventListener("click", () => {
+  state.processes = []; state.reasons = [];
+  state.processOther = ""; state.reasonOther = "";
+  $("#q1otherText").value = ""; $("#q2otherText").value = "";
+  $("#q1other").classList.remove("on"); $("#q2other").classList.remove("on");
+  paint($("#q1opts"), state.processes, MAX_PICKS);
+  paint($("#q2opts"), state.reasons, 0);
+  $("#q1next").disabled = true; $("#q1next").textContent = "Pick up to 2 to continue";
+  $("#q2next").disabled = true; $("#q2next").textContent = "Pick at least 1";
+  $("#status").textContent = "";
+  state.step = 1; state.started = Date.now();
+  $("#hud").hidden = false;
+  show("#scQ1");
+  updateHud();
+});
+
+$("#btnStart").addEventListener("click", () => {
+  state.started = Date.now();
+  state.step = 1;
+  $("#hud").hidden = false;
+  show("#scQ1");
+  updateHud();
+});
+</script>
+</body>
+</html>

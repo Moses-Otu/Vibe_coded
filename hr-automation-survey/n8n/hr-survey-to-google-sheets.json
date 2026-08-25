@@ -1,0 +1,96 @@
+{
+  "name": "HR Automation Survey to Google Sheets",
+  "settings": { "executionOrder": "v1" },
+  "nodes": [
+    {
+      "name": "HR Survey Submitted",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [0, 0],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "hr-automation-survey",
+        "responseMode": "responseNode",
+        "options": { "allowedOrigins": "*" }
+      }
+    },
+    {
+      "name": "Flatten Answers",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [224, 0],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            { "id": "submitted-at", "name": "submittedAt", "value": "={{ $json.body.submittedAt || $now.toISO() }}", "type": "string" },
+            { "id": "seconds-taken", "name": "secondsTaken", "value": "={{ $json.body.secondsTaken || 0 }}", "type": "number" },
+            { "id": "priority-1", "name": "priority1", "value": "={{ ($json.body.processesResolved || [])[0] || '' }}", "type": "string" },
+            { "id": "priority-2", "name": "priority2", "value": "={{ ($json.body.processesResolved || [])[1] || '' }}", "type": "string" },
+            { "id": "all-picks", "name": "allPicks", "value": "={{ ($json.body.processesResolved || []).join(', ') }}", "type": "string" },
+            { "id": "other-process", "name": "otherProcess", "value": "={{ $json.body.processOther || '' }}", "type": "string" },
+            { "id": "reasons", "name": "reasons", "value": "={{ ($json.body.reasonsResolved || []).join(', ') }}", "type": "string" },
+            { "id": "other-reason", "name": "otherReason", "value": "={{ $json.body.reasonOther || '' }}", "type": "string" },
+            { "id": "reason-count", "name": "reasonCount", "value": "={{ ($json.body.reasonsResolved || []).length }}", "type": "number" },
+            { "id": "referrer", "name": "referrer", "value": "={{ $json.body.referrer || '' }}", "type": "string" }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "name": "Append Response Row",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [448, 0],
+      "parameters": {
+        "operation": "append",
+        "documentId": { "__rl": true, "mode": "list", "value": "", "cachedResultName": "HR auto" },
+        "sheetName": { "__rl": true, "mode": "list", "value": "", "cachedResultName": "Sheet1" },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Submitted At": "={{ $json.submittedAt }}",
+            "Seconds Taken": "={{ $json.secondsTaken }}",
+            "Priority 1": "={{ $json.priority1 }}",
+            "Priority 2": "={{ $json.priority2 }}",
+            "All Picks": "={{ $json.allPicks }}",
+            "Other Process": "={{ $json.otherProcess }}",
+            "Reasons": "={{ $json.reasons }}",
+            "Other Reason": "={{ $json.otherReason }}",
+            "Reason Count": "={{ $json.reasonCount }}",
+            "Referrer": "={{ $json.referrer }}"
+          },
+          "schema": [
+            { "id": "Submitted At", "displayName": "Submitted At", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "Seconds Taken", "displayName": "Seconds Taken", "required": false, "defaultMatch": false, "display": true, "type": "number", "canBeUsedToMatch": false },
+            { "id": "Priority 1", "displayName": "Priority 1", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": false },
+            { "id": "Priority 2", "displayName": "Priority 2", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": false },
+            { "id": "All Picks", "displayName": "All Picks", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": false },
+            { "id": "Other Process", "displayName": "Other Process", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": false },
+            { "id": "Reasons", "displayName": "Reasons", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": false },
+            { "id": "Other Reason", "displayName": "Other Reason", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": false },
+            { "id": "Reason Count", "displayName": "Reason Count", "required": false, "defaultMatch": false, "display": true, "type": "number", "canBeUsedToMatch": false },
+            { "id": "Referrer", "displayName": "Referrer", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": false }
+          ]
+        },
+        "options": { "cellFormat": "USER_ENTERED" }
+      }
+    },
+    {
+      "name": "Confirm To Browser",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [672, 0],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{ \"ok\": true }",
+        "options": { "responseCode": 200 }
+      }
+    }
+  ],
+  "connections": {
+    "HR Survey Submitted": { "main": [[{ "node": "Flatten Answers", "type": "main", "index": 0 }]] },
+    "Flatten Answers": { "main": [[{ "node": "Append Response Row", "type": "main", "index": 0 }]] },
+    "Append Response Row": { "main": [[{ "node": "Confirm To Browser", "type": "main", "index": 0 }]] }
+  }
+}
