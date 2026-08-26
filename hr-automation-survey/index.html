@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Which HR work should AI take over?</title>
-<meta name="description" content="Two questions, sixty seconds. Pick the two HR processes you would hand to automation, and tell us why.">
+<meta name="description" content="Two questions, twenty-five seconds. Pick the two HR processes you would hand to automation, and tell us why.">
 <meta property="og:title" content="Which HR work should AI take over?">
-<meta property="og:description" content="Two questions. Sixty seconds. Help decide what we automate first.">
+<meta property="og:description" content="Two questions. Twenty-five seconds. Help decide what we automate first.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
@@ -198,7 +198,7 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
     <p class="lede">Two questions. Pick the two processes you are most likely to automate, then tell us what makes them painful. Your answers decide which demos we build for the event.</p>
     <div class="stats">
       <div class="stat"><b>2</b><span>questions, nothing more</span></div>
-      <div class="stat"><b>60s</b><span>start to finish</span></div>
+      <div class="stat"><b>25s</b><span>start to finish</span></div>
       <div class="stat"><b>0</b><span>personal details asked</span></div>
     </div>
     <button class="cta" id="btnStart">Start the survey</button>
@@ -501,7 +501,7 @@ async function submit(){
 
 /* ---------- share ---------- */
 $("#btnShare").addEventListener("click", async () => {
-  const text = `Which HR processes should AI take over? Two questions, 60 seconds: ${location.href}`;
+  const text = `Which HR processes should AI take over? Two questions, 25 seconds: ${location.href}`;
   if(navigator.share){
     try{ await navigator.share({text}); return; }catch(e){}
   }
