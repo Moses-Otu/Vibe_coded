@@ -8,7 +8,7 @@ Responses post to an n8n webhook, which appends one row per response to Google S
 
 ## The questions
 
-1. **Which TWO HR processes would you most like to automate or improve using AI?**
+1. **Which TWO HR processes would you most likely automate or improve using AI?**
    Fourteen options plus Other, capped at two selections — pick a third and it is
    refused, so the data stays a genuine ranking instead of a wish list.
 2. **What makes these processes a good candidate for AI or automation?**
