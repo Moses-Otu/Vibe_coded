@@ -6,5 +6,4 @@ shared build.
 | Project | What it is |
 | --- | --- |
 | [`hr-automation-survey`](hr-automation-survey) | Two-question survey on which HR processes should be automated first. Single HTML file, posts to an n8n webhook that writes to Google Sheets. |
-| --- | --- |
-| [`employee-feedback`]([employee-feedback]) | Two-question survey on which HR processes should be automated first. Single HTML file, posts to an n8n webhook that writes to Google Sheets. |
+| [`employee-feedback`](employee-feedback) | Two-question survey on which HR processes should be automated first. Single HTML file, posts to an n8n webhook that writes to Google Sheets. |
